@@ -1,0 +1,113 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMS.Service", "RMS.Service\RMS.Service.csproj", "{33E59E36-8A26-4098-BC06-AA387BB24550}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMS.Service.Tests", "RMS.Service.Tests\RMS.Service.Tests.csproj", "{78E644D9-BC20-4EF7-88CE-81E0FF294A4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMS.BAL", "RMS.BAL\RMS.BAL.csproj", "{20A38ECA-152F-40DC-8521-535EFED8F613}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMS.DAL", "RMS.DAL\RMS.DAL.csproj", "{268253FD-9895-4F97-9572-0A7C6C62312E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMS.ViewModel", "RMS.ViewModel\RMS.ViewModel.csproj", "{515BD92E-5D7D-47D8-A7BA-84F01228D731}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMS.Utilities", "RMS.Utilities\RMS.Utilities.csproj", "{ACAABBFF-501B-4D80-B555-BE643D0A69F0}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "RMSClient", "RMSClient", "{F7CFC12F-5662-46B0-8697-AE1EFA7F18A6}"
+	ProjectSection(WebsiteProperties) = preProject
+		SccProjectName = "SAK"
+		SccAuxPath = "SAK"
+		SccLocalPath = "SAK"
+		SccProvider = "SAK"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_62668"
+		Debug.AspNetCompiler.PhysicalPath = "RMSClient\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_62668\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_62668"
+		Release.AspNetCompiler.PhysicalPath = "RMSClient\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_62668\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "62668"
+		SlnRelativePath = "RMSClient\"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{33E59E36-8A26-4098-BC06-AA387BB24550}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33E59E36-8A26-4098-BC06-AA387BB24550}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33E59E36-8A26-4098-BC06-AA387BB24550}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33E59E36-8A26-4098-BC06-AA387BB24550}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78E644D9-BC20-4EF7-88CE-81E0FF294A4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78E644D9-BC20-4EF7-88CE-81E0FF294A4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78E644D9-BC20-4EF7-88CE-81E0FF294A4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78E644D9-BC20-4EF7-88CE-81E0FF294A4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20A38ECA-152F-40DC-8521-535EFED8F613}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20A38ECA-152F-40DC-8521-535EFED8F613}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20A38ECA-152F-40DC-8521-535EFED8F613}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20A38ECA-152F-40DC-8521-535EFED8F613}.Release|Any CPU.Build.0 = Release|Any CPU
+		{268253FD-9895-4F97-9572-0A7C6C62312E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{268253FD-9895-4F97-9572-0A7C6C62312E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{268253FD-9895-4F97-9572-0A7C6C62312E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{268253FD-9895-4F97-9572-0A7C6C62312E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{515BD92E-5D7D-47D8-A7BA-84F01228D731}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{515BD92E-5D7D-47D8-A7BA-84F01228D731}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{515BD92E-5D7D-47D8-A7BA-84F01228D731}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{515BD92E-5D7D-47D8-A7BA-84F01228D731}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACAABBFF-501B-4D80-B555-BE643D0A69F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACAABBFF-501B-4D80-B555-BE643D0A69F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACAABBFF-501B-4D80-B555-BE643D0A69F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACAABBFF-501B-4D80-B555-BE643D0A69F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7CFC12F-5662-46B0-8697-AE1EFA7F18A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7CFC12F-5662-46B0-8697-AE1EFA7F18A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7CFC12F-5662-46B0-8697-AE1EFA7F18A6}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7CFC12F-5662-46B0-8697-AE1EFA7F18A6}.Release|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6EA206F7-9EFA-46F1-8FC2-95C53756F9A0}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 8
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://dev.azure.com/pathik95
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = RMS.Service\\RMS.Service.csproj
+		SccProjectName1 = RMS.Service
+		SccLocalPath1 = RMS.Service
+		SccProjectUniqueName2 = RMS.Service.Tests\\RMS.Service.Tests.csproj
+		SccProjectName2 = RMS.Service.Tests
+		SccLocalPath2 = RMS.Service.Tests
+		SccProjectUniqueName3 = RMS.BAL\\RMS.BAL.csproj
+		SccProjectName3 = RMS.BAL
+		SccLocalPath3 = RMS.BAL
+		SccProjectUniqueName4 = RMS.DAL\\RMS.DAL.csproj
+		SccProjectName4 = RMS.DAL
+		SccLocalPath4 = RMS.DAL
+		SccProjectUniqueName5 = RMS.ViewModel\\RMS.ViewModel.csproj
+		SccProjectName5 = RMS.ViewModel
+		SccLocalPath5 = RMS.ViewModel
+		SccProjectUniqueName6 = RMS.Utilities\\RMS.Utilities.csproj
+		SccProjectName6 = RMS.Utilities
+		SccLocalPath6 = RMS.Utilities
+		SccWebProject7 = true
+		SccProjectUniqueName7 = RMSClient
+		SccProjectName7 = RMSClient
+		SccLocalPath7 = RMSClient
+		SccProjectEnlistmentChoice7 = 2
+	EndGlobalSection
+EndGlobal

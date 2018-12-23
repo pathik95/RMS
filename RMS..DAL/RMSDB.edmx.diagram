@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="ba4ff645e114417f96ce37b0ab443474" Name="Diagram1">
+        <EntityTypeShape EntityType="RepairTrackerModel.RepairStatusMaster" Width="1.5" PointX="3" PointY="5.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="RepairTrackerModel.RepairTracker" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="RepairTrackerModel.ReportStatusChangeLog" Width="1.5" PointX="7.5" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="RepairTrackerModel.RoleMaster" Width="1.5" PointX="0.75" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="RepairTrackerModel.UserMaster" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
+        <AssociationConnector Association="RepairTrackerModel.FK_RepairTracker_RepairStatusMaster" ManuallyRouted="false" />
+        <AssociationConnector Association="RepairTrackerModel.FK_ReportStatusChangeLog_RepairStatusMaster" ManuallyRouted="false" />
+        <AssociationConnector Association="RepairTrackerModel.FK_RepairTracker_UserMaster" ManuallyRouted="false" />
+        <AssociationConnector Association="RepairTrackerModel.FK_ReportStatusChangeLog_RepairTracker" ManuallyRouted="false" />
+        <AssociationConnector Association="RepairTrackerModel.FK_ReportStatusChangeLog_UserMaster" ManuallyRouted="false" />
+        <AssociationConnector Association="RepairTrackerModel.FK_UserMaster_RoleMaster" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

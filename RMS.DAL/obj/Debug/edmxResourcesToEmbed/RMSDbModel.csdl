@@ -1,0 +1,309 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="RMSDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="RoleMaster">
+    <Key>
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="RoleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RoleName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="UserMaster" Relationship="Self.FK_UserMaster_RoleMaster" FromRole="RoleMaster" ToRole="UserMaster" />
+  </EntityType>
+  <EntityType Name="UserMaster">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DisplayName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="UserName" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="EmailId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="RoleId" Type="Int32" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="SecurityToken" Type="Guid" Nullable="false" />
+    <NavigationProperty Name="RoleMaster" Relationship="Self.FK_UserMaster_RoleMaster" FromRole="UserMaster" ToRole="RoleMaster" />
+    <NavigationProperty Name="RequestStatusChangeLog" Relationship="RMSDbModel.FK_ReportStatusChangeLog_UserMaster" FromRole="UserMaster" ToRole="RequestStatusChangeLog" />
+    <NavigationProperty Name="RepairRequestDetails" Relationship="RMSDbModel.FK_RepairTracker_UserMaster" FromRole="UserMaster" ToRole="RepairRequestDetails" />
+  </EntityType>
+  <Association Name="FK_UserMaster_RoleMaster">
+    <End Role="RoleMaster" Type="Self.RoleMaster" Multiplicity="1" />
+    <End Role="UserMaster" Type="Self.UserMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RoleMaster">
+        <PropertyRef Name="RoleId" />
+      </Principal>
+      <Dependent Role="UserMaster">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="RMSDbContext" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="RoleMaster" EntityType="Self.RoleMaster" />
+    <EntitySet Name="UserMaster" EntityType="Self.UserMaster" />
+    <AssociationSet Name="FK_UserMaster_RoleMaster" Association="Self.FK_UserMaster_RoleMaster">
+      <End Role="RoleMaster" EntitySet="RoleMaster" />
+      <End Role="UserMaster" EntitySet="UserMaster" />
+    </AssociationSet>
+    <FunctionImport Name="USP_AddUser">
+      <Parameter Name="userName" Mode="In" Type="String" />
+      <Parameter Name="password" Mode="In" Type="String" />
+      <Parameter Name="displayName" Mode="In" Type="String" />
+      <Parameter Name="emailId" Mode="In" Type="String" />
+      <Parameter Name="roleId" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="USP_AuthenticateUser" ReturnType="Collection(RMSDbModel.USP_AuthenticateUser_Result)">
+      <Parameter Name="userName" Mode="In" Type="String" />
+      <Parameter Name="password" Mode="In" Type="String" />
+    </FunctionImport>
+    <EntitySet Name="ErrorInfo" EntityType="RMSDbModel.ErrorInfo" />
+    <EntitySet Name="RequestStatusChangeLog" EntityType="RMSDbModel.RequestStatusChangeLog" />
+    <EntitySet Name="RequestStatusMaster" EntityType="RMSDbModel.RequestStatusMaster" />
+    <AssociationSet Name="FK_ReportStatusChangeLog_RepairStatusMaster" Association="RMSDbModel.FK_ReportStatusChangeLog_RepairStatusMaster">
+      <End Role="RequestStatusMaster" EntitySet="RequestStatusMaster" />
+      <End Role="RequestStatusChangeLog" EntitySet="RequestStatusChangeLog" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ReportStatusChangeLog_UserMaster" Association="RMSDbModel.FK_ReportStatusChangeLog_UserMaster">
+      <End Role="UserMaster" EntitySet="UserMaster" />
+      <End Role="RequestStatusChangeLog" EntitySet="RequestStatusChangeLog" />
+    </AssociationSet>
+    <FunctionImport Name="USP_GetRequestDetails" ReturnType="Collection(RMSDbModel.USP_GetRequestDetails_Result)">
+      <Parameter Name="requestId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="USP_GetRequestStatusChangeLog" ReturnType="Collection(RMSDbModel.USP_GetRequestStatusChangeLog_Result)">
+      <Parameter Name="requestId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <EntitySet Name="CityMaster" EntityType="RMSDbModel.CityMaster" />
+    <EntitySet Name="StateMaster" EntityType="RMSDbModel.StateMaster" />
+    <AssociationSet Name="FK_CityMaster_StateMaster" Association="RMSDbModel.FK_CityMaster_StateMaster">
+      <End Role="StateMaster" EntitySet="StateMaster" />
+      <End Role="CityMaster" EntitySet="CityMaster" />
+    </AssociationSet>
+    <FunctionImport Name="USP_GetRequestsForDashboard" ReturnType="Collection(RMSDbModel.USP_GetRequestsForDashboard_Result)">
+      <Parameter Name="userId" Mode="In" Type="Int32" />
+      <Parameter Name="statusId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <EntitySet Name="RepairRequestDetails" EntityType="RMSDbModel.RepairRequestDetails" />
+    <AssociationSet Name="FK_RepairTracker_RepairStatusMaster" Association="RMSDbModel.FK_RepairTracker_RepairStatusMaster">
+      <End Role="RequestStatusMaster" EntitySet="RequestStatusMaster" />
+      <End Role="RepairRequestDetails" EntitySet="RepairRequestDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RepairTracker_UserMaster" Association="RMSDbModel.FK_RepairTracker_UserMaster">
+      <End Role="UserMaster" EntitySet="UserMaster" />
+      <End Role="RepairRequestDetails" EntitySet="RepairRequestDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ReportStatusChangeLog_RepairTracker" Association="RMSDbModel.FK_ReportStatusChangeLog_RepairTracker">
+      <End Role="RepairRequestDetails" EntitySet="RepairRequestDetails" />
+      <End Role="RequestStatusChangeLog" EntitySet="RequestStatusChangeLog" />
+    </AssociationSet>
+    <FunctionImport Name="USP_GetRequestCountByStatus" ReturnType="Collection(RMSDbModel.USP_GetRequestCountByStatus_Result)">
+      <Parameter Name="statusId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="USP_GetRequestStartEndDate" ReturnType="Collection(RMSDbModel.USP_GetRequestStartEndDate_Result)" />
+    <FunctionImport Name="USP_GetMyRequsetCountForReport" ReturnType="Collection(RMSDbModel.USP_GetMyRequsetCountForReport_Result)">
+      <Parameter Name="userId" Mode="In" Type="Int32" />
+    </FunctionImport>
+  </EntityContainer>
+  <ComplexType Name="USP_AuthenticateUser_Result">
+    <Property Type="Int32" Name="UserId" Nullable="false" />
+    <Property Type="String" Name="UserName" Nullable="false" MaxLength="15" />
+    <Property Type="String" Name="EmailId" Nullable="false" />
+    <Property Type="String" Name="RoleName" Nullable="false" />
+    <Property Type="Int32" Name="RoleId" Nullable="false" />
+    <Property Type="Guid" Name="SecurityToken" Nullable="false" />
+    <Property Type="String" Name="DisplayName" Nullable="false" />
+  </ComplexType>
+  <EntityType Name="ErrorInfo">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Source" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="InnerException" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Caller" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="LogTime" Type="DateTime" Precision="3" />
+    <Property Name="StackTrace" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="RequestURI" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="RequestStatusChangeLog">
+    <Key>
+      <PropertyRef Name="LogId" />
+    </Key>
+    <Property Name="LogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestId" Type="Int32" Nullable="false" />
+    <Property Name="StatusId" Type="Int32" Nullable="false" />
+    <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
+    <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="RequestStatusMaster" Relationship="RMSDbModel.FK_ReportStatusChangeLog_RepairStatusMaster" FromRole="RequestStatusChangeLog" ToRole="RequestStatusMaster" />
+    <NavigationProperty Name="UserMaster" Relationship="RMSDbModel.FK_ReportStatusChangeLog_UserMaster" FromRole="RequestStatusChangeLog" ToRole="UserMaster" />
+    <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="RepairRequestDetails" Relationship="RMSDbModel.FK_ReportStatusChangeLog_RepairTracker" FromRole="RequestStatusChangeLog" ToRole="RepairRequestDetails" />
+  </EntityType>
+  <EntityType Name="RequestStatusMaster">
+    <Key>
+      <PropertyRef Name="StatusId" />
+    </Key>
+    <Property Name="StatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="StatusName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="RequestStatusChangeLog" Relationship="RMSDbModel.FK_ReportStatusChangeLog_RepairStatusMaster" FromRole="RequestStatusMaster" ToRole="RequestStatusChangeLog" />
+    <NavigationProperty Name="RepairRequestDetails" Relationship="RMSDbModel.FK_RepairTracker_RepairStatusMaster" FromRole="RequestStatusMaster" ToRole="RepairRequestDetails" />
+  </EntityType>
+  <Association Name="FK_ReportStatusChangeLog_RepairStatusMaster">
+    <End Type="RMSDbModel.RequestStatusMaster" Role="RequestStatusMaster" Multiplicity="1" />
+    <End Type="RMSDbModel.RequestStatusChangeLog" Role="RequestStatusChangeLog" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RequestStatusMaster">
+        <PropertyRef Name="StatusId" />
+      </Principal>
+      <Dependent Role="RequestStatusChangeLog">
+        <PropertyRef Name="StatusId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ReportStatusChangeLog_UserMaster">
+    <End Type="RMSDbModel.UserMaster" Role="UserMaster" Multiplicity="1" />
+    <End Type="RMSDbModel.RequestStatusChangeLog" Role="RequestStatusChangeLog" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserMaster">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="RequestStatusChangeLog">
+        <PropertyRef Name="ModifiedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <ComplexType Name="USP_GetRequestDetails_Result">
+    <Property Type="Int32" Name="RequestId" Nullable="false" />
+    <Property Type="String" Name="CompanyName" Nullable="false" />
+    <Property Type="String" Name="ModelNumber" Nullable="false" />
+    <Property Type="String" Name="ProblemDetails" Nullable="false" />
+    <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="23" />
+    <Property Type="String" Name="CustomerContact" Nullable="false" MaxLength="10" />
+    <Property Type="String" Name="CustomerName" Nullable="false" />
+    <Property Type="Int32" Name="StatusId" Nullable="true" />
+    <Property Type="String" Name="StatusName" Nullable="true" />
+    <Property Type="String" Name="DisplayName" Nullable="true" />
+    <Property Type="Decimal" Name="Expense" Nullable="true" Precision="18" Scale="2" />
+    <Property Type="String" Name="FullAddress" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="USP_GetRequestStatusChangeLog_Result">
+    <Property Type="DateTime" Name="ModifiedOn" Nullable="false" Precision="23" />
+    <Property Type="String" Name="Comments" Nullable="true" />
+    <Property Type="Int32" Name="StatusId" Nullable="false" />
+    <Property Type="String" Name="StatusName" Nullable="false" />
+    <Property Type="String" Name="ModifiedBy" Nullable="false" />
+  </ComplexType>
+  <EntityType Name="CityMaster">
+    <Key>
+      <PropertyRef Name="CityId" />
+    </Key>
+    <Property Name="CityId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CityName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="StateId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="StateMaster" Relationship="RMSDbModel.FK_CityMaster_StateMaster" FromRole="CityMaster" ToRole="StateMaster" />
+  </EntityType>
+  <EntityType Name="StateMaster">
+    <Key>
+      <PropertyRef Name="StateId" />
+    </Key>
+    <Property Name="StateId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="StateName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="CityMaster" Relationship="RMSDbModel.FK_CityMaster_StateMaster" FromRole="StateMaster" ToRole="CityMaster" />
+  </EntityType>
+  <Association Name="FK_CityMaster_StateMaster">
+    <End Type="RMSDbModel.StateMaster" Role="StateMaster" Multiplicity="1" />
+    <End Type="RMSDbModel.CityMaster" Role="CityMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StateMaster">
+        <PropertyRef Name="StateId" />
+      </Principal>
+      <Dependent Role="CityMaster">
+        <PropertyRef Name="StateId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <ComplexType Name="USP_GetRequestsForDashboard_Result">
+    <Property Type="Int32" Name="RequestId" Nullable="false" />
+    <Property Type="String" Name="CompanyName" Nullable="false" />
+    <Property Type="String" Name="ModelNumber" Nullable="false" />
+    <Property Type="String" Name="ProblemDetails" Nullable="false" />
+    <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="23" />
+    <Property Type="String" Name="CustomerContact" Nullable="false" MaxLength="10" />
+    <Property Type="String" Name="CustomerName" Nullable="false" />
+    <Property Type="Int32" Name="StatusId" Nullable="false" />
+    <Property Type="String" Name="StatusName" Nullable="false" />
+    <Property Type="String" Name="DisplayName" Nullable="false" />
+  </ComplexType>
+  <EntityType Name="RepairRequestDetails">
+    <Key>
+      <PropertyRef Name="RequestId" />
+    </Key>
+    <Property Name="RequestId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CompanyName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ModelNumber" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ProblemDetails" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+    <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="StatusId" Type="Int32" Nullable="false" />
+    <Property Name="CustomerName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CustomerContact" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="CustomerAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CustomerPinCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="StateId" Type="Int32" />
+    <Property Name="CityId" Type="Int32" />
+    <Property Name="Expense" Type="Decimal" Precision="18" Scale="2" />
+    <NavigationProperty Name="RequestStatusMaster" Relationship="RMSDbModel.FK_RepairTracker_RepairStatusMaster" FromRole="RepairRequestDetails" ToRole="RequestStatusMaster" />
+    <NavigationProperty Name="UserMaster" Relationship="RMSDbModel.FK_RepairTracker_UserMaster" FromRole="RepairRequestDetails" ToRole="UserMaster" />
+    <NavigationProperty Name="RequestStatusChangeLog" Relationship="RMSDbModel.FK_ReportStatusChangeLog_RepairTracker" FromRole="RepairRequestDetails" ToRole="RequestStatusChangeLog" />
+  </EntityType>
+  <Association Name="FK_RepairTracker_RepairStatusMaster">
+    <End Type="RMSDbModel.RequestStatusMaster" Role="RequestStatusMaster" Multiplicity="1" />
+    <End Type="RMSDbModel.RepairRequestDetails" Role="RepairRequestDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RequestStatusMaster">
+        <PropertyRef Name="StatusId" />
+      </Principal>
+      <Dependent Role="RepairRequestDetails">
+        <PropertyRef Name="StatusId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RepairTracker_UserMaster">
+    <End Type="RMSDbModel.UserMaster" Role="UserMaster" Multiplicity="1" />
+    <End Type="RMSDbModel.RepairRequestDetails" Role="RepairRequestDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserMaster">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="RepairRequestDetails">
+        <PropertyRef Name="CreatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ReportStatusChangeLog_RepairTracker">
+    <End Type="RMSDbModel.RepairRequestDetails" Role="RepairRequestDetails" Multiplicity="1" />
+    <End Type="RMSDbModel.RequestStatusChangeLog" Role="RequestStatusChangeLog" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RepairRequestDetails">
+        <PropertyRef Name="RequestId" />
+      </Principal>
+      <Dependent Role="RequestStatusChangeLog">
+        <PropertyRef Name="RequestId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <ComplexType Name="USP_GetRequestCountByStatus_Result">
+    <Property Type="String" Name="StatusName" Nullable="false" />
+    <Property Type="Int32" Name="RequestCount" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="USP_GetRequestStartEndDate_Result">
+    <Property Type="Int32" Name="RequestId" Nullable="false" />
+    <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="ClosedOn" Nullable="false" Precision="23" />
+  </ComplexType>
+  <ComplexType Name="USP_GetMyRequsetCountForReport_Result">
+    <Property Type="String" Name="CreatedDate" Nullable="true" MaxLength="30" />
+    <Property Type="Int32" Name="RequestCount" Nullable="true" />
+  </ComplexType>
+</Schema>

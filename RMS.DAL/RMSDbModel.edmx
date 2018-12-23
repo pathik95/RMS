@@ -1,0 +1,763 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="RMSDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CityMaster">
+          <Key>
+            <PropertyRef Name="CityId" />
+          </Key>
+          <Property Name="CityId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CityName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="StateId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ErrorInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Source" Type="nvarchar(max)" />
+          <Property Name="Message" Type="nvarchar(max)" />
+          <Property Name="InnerException" Type="nvarchar(max)" />
+          <Property Name="Caller" Type="nvarchar(max)" />
+          <Property Name="LogTime" Type="datetime" />
+          <Property Name="StackTrace" Type="nvarchar(max)" />
+          <Property Name="RequestURI" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="RepairRequestDetails">
+          <Key>
+            <PropertyRef Name="RequestId" />
+          </Key>
+          <Property Name="RequestId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CompanyName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ModelNumber" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ProblemDetails" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="StatusId" Type="int" Nullable="false" />
+          <Property Name="CustomerName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CustomerContact" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="CustomerAddress" Type="nvarchar(max)" />
+          <Property Name="CustomerPinCode" Type="nvarchar(max)" />
+          <Property Name="StateId" Type="int" />
+          <Property Name="CityId" Type="int" />
+          <Property Name="Expense" Type="decimal" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="RequestStatusChangeLog">
+          <Key>
+            <PropertyRef Name="LogId" />
+          </Key>
+          <Property Name="LogId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RequestId" Type="int" Nullable="false" />
+          <Property Name="StatusId" Type="int" Nullable="false" />
+          <Property Name="ModifiedBy" Type="int" Nullable="false" />
+          <Property Name="ModifiedOn" Type="datetime" Nullable="false" />
+          <Property Name="Comments" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="RequestStatusMaster">
+          <Key>
+            <PropertyRef Name="StatusId" />
+          </Key>
+          <Property Name="StatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StatusName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RoleMaster">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoleName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StateMaster">
+          <Key>
+            <PropertyRef Name="StateId" />
+          </Key>
+          <Property Name="StateId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StateName" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserMaster">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="15" Nullable="false" />
+          <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="EmailId" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="SecurityToken" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_CityMaster_StateMaster">
+          <End Role="StateMaster" Type="Self.StateMaster" Multiplicity="1" />
+          <End Role="CityMaster" Type="Self.CityMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StateMaster">
+              <PropertyRef Name="StateId" />
+            </Principal>
+            <Dependent Role="CityMaster">
+              <PropertyRef Name="StateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RepairTracker_RepairStatusMaster">
+          <End Role="RequestStatusMaster" Type="Self.RequestStatusMaster" Multiplicity="1" />
+          <End Role="RepairRequestDetails" Type="Self.RepairRequestDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RequestStatusMaster">
+              <PropertyRef Name="StatusId" />
+            </Principal>
+            <Dependent Role="RepairRequestDetails">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RepairTracker_UserMaster">
+          <End Role="UserMaster" Type="Self.UserMaster" Multiplicity="1" />
+          <End Role="RepairRequestDetails" Type="Self.RepairRequestDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserMaster">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="RepairRequestDetails">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportStatusChangeLog_RepairStatusMaster">
+          <End Role="RequestStatusMaster" Type="Self.RequestStatusMaster" Multiplicity="1" />
+          <End Role="RequestStatusChangeLog" Type="Self.RequestStatusChangeLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RequestStatusMaster">
+              <PropertyRef Name="StatusId" />
+            </Principal>
+            <Dependent Role="RequestStatusChangeLog">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportStatusChangeLog_RepairTracker">
+          <End Role="RepairRequestDetails" Type="Self.RepairRequestDetails" Multiplicity="1" />
+          <End Role="RequestStatusChangeLog" Type="Self.RequestStatusChangeLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RepairRequestDetails">
+              <PropertyRef Name="RequestId" />
+            </Principal>
+            <Dependent Role="RequestStatusChangeLog">
+              <PropertyRef Name="RequestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportStatusChangeLog_UserMaster">
+          <End Role="UserMaster" Type="Self.UserMaster" Multiplicity="1" />
+          <End Role="RequestStatusChangeLog" Type="Self.RequestStatusChangeLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserMaster">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="RequestStatusChangeLog">
+              <PropertyRef Name="ModifiedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserMaster_RoleMaster">
+          <End Role="RoleMaster" Type="Self.RoleMaster" Multiplicity="1" />
+          <End Role="UserMaster" Type="Self.UserMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RoleMaster">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="UserMaster">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="USP_AddUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userName" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="password" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="displayName" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="emailId" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="roleId" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="USP_AuthenticateUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userName" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="password" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="USP_GetMyRequsetCountForReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="USP_GetRequestCountByStatus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="statusId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="USP_GetRequestDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="requestId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="USP_GetRequestsForDashboard" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userId" Type="int" Mode="In" />
+          <Parameter Name="statusId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="USP_GetRequestStartEndDate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="USP_GetRequestStatusChangeLog" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="requestId" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="RMSDbModelStoreContainer">
+          <EntitySet Name="CityMaster" EntityType="Self.CityMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ErrorInfo" EntityType="Self.ErrorInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RepairRequestDetails" EntityType="Self.RepairRequestDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RequestStatusChangeLog" EntityType="Self.RequestStatusChangeLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RequestStatusMaster" EntityType="Self.RequestStatusMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RoleMaster" EntityType="Self.RoleMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StateMaster" EntityType="Self.StateMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserMaster" EntityType="Self.UserMaster" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CityMaster_StateMaster" Association="Self.FK_CityMaster_StateMaster">
+            <End Role="StateMaster" EntitySet="StateMaster" />
+            <End Role="CityMaster" EntitySet="CityMaster" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RepairTracker_RepairStatusMaster" Association="Self.FK_RepairTracker_RepairStatusMaster">
+            <End Role="RequestStatusMaster" EntitySet="RequestStatusMaster" />
+            <End Role="RepairRequestDetails" EntitySet="RepairRequestDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RepairTracker_UserMaster" Association="Self.FK_RepairTracker_UserMaster">
+            <End Role="UserMaster" EntitySet="UserMaster" />
+            <End Role="RepairRequestDetails" EntitySet="RepairRequestDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportStatusChangeLog_RepairStatusMaster" Association="Self.FK_ReportStatusChangeLog_RepairStatusMaster">
+            <End Role="RequestStatusMaster" EntitySet="RequestStatusMaster" />
+            <End Role="RequestStatusChangeLog" EntitySet="RequestStatusChangeLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportStatusChangeLog_RepairTracker" Association="Self.FK_ReportStatusChangeLog_RepairTracker">
+            <End Role="RepairRequestDetails" EntitySet="RepairRequestDetails" />
+            <End Role="RequestStatusChangeLog" EntitySet="RequestStatusChangeLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportStatusChangeLog_UserMaster" Association="Self.FK_ReportStatusChangeLog_UserMaster">
+            <End Role="UserMaster" EntitySet="UserMaster" />
+            <End Role="RequestStatusChangeLog" EntitySet="RequestStatusChangeLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserMaster_RoleMaster" Association="Self.FK_UserMaster_RoleMaster">
+            <End Role="RoleMaster" EntitySet="RoleMaster" />
+            <End Role="UserMaster" EntitySet="UserMaster" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="RMSDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="RoleMaster">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="UserMaster" Relationship="Self.FK_UserMaster_RoleMaster" FromRole="RoleMaster" ToRole="UserMaster" />
+        </EntityType>
+        <EntityType Name="UserMaster">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DisplayName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EmailId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="SecurityToken" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="RoleMaster" Relationship="Self.FK_UserMaster_RoleMaster" FromRole="UserMaster" ToRole="RoleMaster" />
+          <NavigationProperty Name="RequestStatusChangeLog" Relationship="RMSDbModel.FK_ReportStatusChangeLog_UserMaster" FromRole="UserMaster" ToRole="RequestStatusChangeLog" />
+          <NavigationProperty Name="RepairRequestDetails" Relationship="RMSDbModel.FK_RepairTracker_UserMaster" FromRole="UserMaster" ToRole="RepairRequestDetails" />
+        </EntityType>
+        <Association Name="FK_UserMaster_RoleMaster">
+          <End Role="RoleMaster" Type="Self.RoleMaster" Multiplicity="1" />
+          <End Role="UserMaster" Type="Self.UserMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RoleMaster">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="UserMaster">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="RMSDbContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="RoleMaster" EntityType="Self.RoleMaster" />
+          <EntitySet Name="UserMaster" EntityType="Self.UserMaster" />
+          <AssociationSet Name="FK_UserMaster_RoleMaster" Association="Self.FK_UserMaster_RoleMaster">
+            <End Role="RoleMaster" EntitySet="RoleMaster" />
+            <End Role="UserMaster" EntitySet="UserMaster" />
+          </AssociationSet>
+          <FunctionImport Name="USP_AddUser">
+            <Parameter Name="userName" Mode="In" Type="String" />
+            <Parameter Name="password" Mode="In" Type="String" />
+            <Parameter Name="displayName" Mode="In" Type="String" />
+            <Parameter Name="emailId" Mode="In" Type="String" />
+            <Parameter Name="roleId" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="USP_AuthenticateUser" ReturnType="Collection(RMSDbModel.USP_AuthenticateUser_Result)">
+            <Parameter Name="userName" Mode="In" Type="String" />
+            <Parameter Name="password" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="ErrorInfo" EntityType="RMSDbModel.ErrorInfo" />
+          <EntitySet Name="RequestStatusChangeLog" EntityType="RMSDbModel.RequestStatusChangeLog" />
+          <EntitySet Name="RequestStatusMaster" EntityType="RMSDbModel.RequestStatusMaster" />
+          <AssociationSet Name="FK_ReportStatusChangeLog_RepairStatusMaster" Association="RMSDbModel.FK_ReportStatusChangeLog_RepairStatusMaster">
+            <End Role="RequestStatusMaster" EntitySet="RequestStatusMaster" />
+            <End Role="RequestStatusChangeLog" EntitySet="RequestStatusChangeLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportStatusChangeLog_UserMaster" Association="RMSDbModel.FK_ReportStatusChangeLog_UserMaster">
+            <End Role="UserMaster" EntitySet="UserMaster" />
+            <End Role="RequestStatusChangeLog" EntitySet="RequestStatusChangeLog" />
+          </AssociationSet>
+          <FunctionImport Name="USP_GetRequestDetails" ReturnType="Collection(RMSDbModel.USP_GetRequestDetails_Result)">
+          <Parameter Name="requestId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="USP_GetRequestStatusChangeLog" ReturnType="Collection(RMSDbModel.USP_GetRequestStatusChangeLog_Result)">
+          <Parameter Name="requestId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="CityMaster" EntityType="RMSDbModel.CityMaster" />
+          <EntitySet Name="StateMaster" EntityType="RMSDbModel.StateMaster" />
+          <AssociationSet Name="FK_CityMaster_StateMaster" Association="RMSDbModel.FK_CityMaster_StateMaster">
+            <End Role="StateMaster" EntitySet="StateMaster" />
+            <End Role="CityMaster" EntitySet="CityMaster" />
+          </AssociationSet>
+          <FunctionImport Name="USP_GetRequestsForDashboard" ReturnType="Collection(RMSDbModel.USP_GetRequestsForDashboard_Result)">
+            <Parameter Name="userId" Mode="In" Type="Int32" />
+            <Parameter Name="statusId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="RepairRequestDetails" EntityType="RMSDbModel.RepairRequestDetails" />
+          <AssociationSet Name="FK_RepairTracker_RepairStatusMaster" Association="RMSDbModel.FK_RepairTracker_RepairStatusMaster">
+            <End Role="RequestStatusMaster" EntitySet="RequestStatusMaster" />
+            <End Role="RepairRequestDetails" EntitySet="RepairRequestDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RepairTracker_UserMaster" Association="RMSDbModel.FK_RepairTracker_UserMaster">
+            <End Role="UserMaster" EntitySet="UserMaster" />
+            <End Role="RepairRequestDetails" EntitySet="RepairRequestDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportStatusChangeLog_RepairTracker" Association="RMSDbModel.FK_ReportStatusChangeLog_RepairTracker">
+            <End Role="RepairRequestDetails" EntitySet="RepairRequestDetails" />
+            <End Role="RequestStatusChangeLog" EntitySet="RequestStatusChangeLog" />
+          </AssociationSet>
+          <FunctionImport Name="USP_GetRequestCountByStatus" ReturnType="Collection(RMSDbModel.USP_GetRequestCountByStatus_Result)">
+          <Parameter Name="statusId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="USP_GetRequestStartEndDate" ReturnType="Collection(RMSDbModel.USP_GetRequestStartEndDate_Result)" />
+          <FunctionImport Name="USP_GetMyRequsetCountForReport" ReturnType="Collection(RMSDbModel.USP_GetMyRequsetCountForReport_Result)">
+            <Parameter Name="userId" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="USP_AuthenticateUser_Result">
+          <Property Type="Int32" Name="UserId" Nullable="false" />
+          <Property Type="String" Name="UserName" Nullable="false" MaxLength="15" />
+          <Property Type="String" Name="EmailId" Nullable="false" />
+          <Property Type="String" Name="RoleName" Nullable="false" />
+          <Property Type="Int32" Name="RoleId" Nullable="false" />
+          <Property Type="Guid" Name="SecurityToken" Nullable="false" />
+          <Property Type="String" Name="DisplayName" Nullable="false" />
+        </ComplexType>
+        <EntityType Name="ErrorInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Source" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="InnerException" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Caller" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LogTime" Type="DateTime" Precision="3" />
+          <Property Name="StackTrace" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="RequestURI" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="RequestStatusChangeLog">
+          <Key>
+            <PropertyRef Name="LogId" />
+          </Key>
+          <Property Name="LogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RequestId" Type="Int32" Nullable="false" />
+          <Property Name="StatusId" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="RequestStatusMaster" Relationship="RMSDbModel.FK_ReportStatusChangeLog_RepairStatusMaster" FromRole="RequestStatusChangeLog" ToRole="RequestStatusMaster" />
+          <NavigationProperty Name="UserMaster" Relationship="RMSDbModel.FK_ReportStatusChangeLog_UserMaster" FromRole="RequestStatusChangeLog" ToRole="UserMaster" />
+          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="RepairRequestDetails" Relationship="RMSDbModel.FK_ReportStatusChangeLog_RepairTracker" FromRole="RequestStatusChangeLog" ToRole="RepairRequestDetails" />
+        </EntityType>
+        <EntityType Name="RequestStatusMaster">
+          <Key>
+            <PropertyRef Name="StatusId" />
+          </Key>
+          <Property Name="StatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StatusName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="RequestStatusChangeLog" Relationship="RMSDbModel.FK_ReportStatusChangeLog_RepairStatusMaster" FromRole="RequestStatusMaster" ToRole="RequestStatusChangeLog" />
+          <NavigationProperty Name="RepairRequestDetails" Relationship="RMSDbModel.FK_RepairTracker_RepairStatusMaster" FromRole="RequestStatusMaster" ToRole="RepairRequestDetails" />
+        </EntityType>
+        <Association Name="FK_ReportStatusChangeLog_RepairStatusMaster">
+          <End Type="RMSDbModel.RequestStatusMaster" Role="RequestStatusMaster" Multiplicity="1" />
+          <End Type="RMSDbModel.RequestStatusChangeLog" Role="RequestStatusChangeLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RequestStatusMaster">
+              <PropertyRef Name="StatusId" />
+            </Principal>
+            <Dependent Role="RequestStatusChangeLog">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportStatusChangeLog_UserMaster">
+          <End Type="RMSDbModel.UserMaster" Role="UserMaster" Multiplicity="1" />
+          <End Type="RMSDbModel.RequestStatusChangeLog" Role="RequestStatusChangeLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserMaster">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="RequestStatusChangeLog">
+              <PropertyRef Name="ModifiedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="USP_GetRequestDetails_Result">
+          <Property Type="Int32" Name="RequestId" Nullable="false" />
+          <Property Type="String" Name="CompanyName" Nullable="false" />
+          <Property Type="String" Name="ModelNumber" Nullable="false" />
+          <Property Type="String" Name="ProblemDetails" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="23" />
+          <Property Type="String" Name="CustomerContact" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="CustomerName" Nullable="false" />
+          <Property Type="Int32" Name="StatusId" Nullable="true" />
+          <Property Type="String" Name="StatusName" Nullable="true" />
+          <Property Type="String" Name="DisplayName" Nullable="true" />
+          <Property Type="Decimal" Name="Expense" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="String" Name="FullAddress" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="USP_GetRequestStatusChangeLog_Result">
+          <Property Type="DateTime" Name="ModifiedOn" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Comments" Nullable="true" />
+          <Property Type="Int32" Name="StatusId" Nullable="false" />
+          <Property Type="String" Name="StatusName" Nullable="false" />
+          <Property Type="String" Name="ModifiedBy" Nullable="false" />
+        </ComplexType>
+        <EntityType Name="CityMaster">
+          <Key>
+            <PropertyRef Name="CityId" />
+          </Key>
+          <Property Name="CityId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CityName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StateId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="StateMaster" Relationship="RMSDbModel.FK_CityMaster_StateMaster" FromRole="CityMaster" ToRole="StateMaster" />
+        </EntityType>
+        <EntityType Name="StateMaster">
+          <Key>
+            <PropertyRef Name="StateId" />
+          </Key>
+          <Property Name="StateId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StateName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CityMaster" Relationship="RMSDbModel.FK_CityMaster_StateMaster" FromRole="StateMaster" ToRole="CityMaster" />
+        </EntityType>
+        <Association Name="FK_CityMaster_StateMaster">
+          <End Type="RMSDbModel.StateMaster" Role="StateMaster" Multiplicity="1" />
+          <End Type="RMSDbModel.CityMaster" Role="CityMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StateMaster">
+              <PropertyRef Name="StateId" />
+            </Principal>
+            <Dependent Role="CityMaster">
+              <PropertyRef Name="StateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="USP_GetRequestsForDashboard_Result">
+          <Property Type="Int32" Name="RequestId" Nullable="false" />
+          <Property Type="String" Name="CompanyName" Nullable="false" />
+          <Property Type="String" Name="ModelNumber" Nullable="false" />
+          <Property Type="String" Name="ProblemDetails" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="23" />
+          <Property Type="String" Name="CustomerContact" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="CustomerName" Nullable="false" />
+          <Property Type="Int32" Name="StatusId" Nullable="false" />
+          <Property Type="String" Name="StatusName" Nullable="false" />
+          <Property Type="String" Name="DisplayName" Nullable="false" />
+        </ComplexType>
+        <EntityType Name="RepairRequestDetails">
+          <Key>
+            <PropertyRef Name="RequestId" />
+          </Key>
+          <Property Name="RequestId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CompanyName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModelNumber" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ProblemDetails" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="StatusId" Type="Int32" Nullable="false" />
+          <Property Name="CustomerName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerContact" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerPinCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StateId" Type="Int32" />
+          <Property Name="CityId" Type="Int32" />
+          <Property Name="Expense" Type="Decimal" Precision="18" Scale="2" />
+          <NavigationProperty Name="RequestStatusMaster" Relationship="RMSDbModel.FK_RepairTracker_RepairStatusMaster" FromRole="RepairRequestDetails" ToRole="RequestStatusMaster" />
+          <NavigationProperty Name="UserMaster" Relationship="RMSDbModel.FK_RepairTracker_UserMaster" FromRole="RepairRequestDetails" ToRole="UserMaster" />
+          <NavigationProperty Name="RequestStatusChangeLog" Relationship="RMSDbModel.FK_ReportStatusChangeLog_RepairTracker" FromRole="RepairRequestDetails" ToRole="RequestStatusChangeLog" />
+        </EntityType>
+        <Association Name="FK_RepairTracker_RepairStatusMaster">
+          <End Type="RMSDbModel.RequestStatusMaster" Role="RequestStatusMaster" Multiplicity="1" />
+          <End Type="RMSDbModel.RepairRequestDetails" Role="RepairRequestDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RequestStatusMaster">
+              <PropertyRef Name="StatusId" />
+            </Principal>
+            <Dependent Role="RepairRequestDetails">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RepairTracker_UserMaster">
+          <End Type="RMSDbModel.UserMaster" Role="UserMaster" Multiplicity="1" />
+          <End Type="RMSDbModel.RepairRequestDetails" Role="RepairRequestDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserMaster">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="RepairRequestDetails">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportStatusChangeLog_RepairTracker">
+          <End Type="RMSDbModel.RepairRequestDetails" Role="RepairRequestDetails" Multiplicity="1" />
+          <End Type="RMSDbModel.RequestStatusChangeLog" Role="RequestStatusChangeLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RepairRequestDetails">
+              <PropertyRef Name="RequestId" />
+            </Principal>
+            <Dependent Role="RequestStatusChangeLog">
+              <PropertyRef Name="RequestId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="USP_GetRequestCountByStatus_Result">
+          <Property Type="String" Name="StatusName" Nullable="false" />
+          <Property Type="Int32" Name="RequestCount" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="USP_GetRequestStartEndDate_Result">
+          <Property Type="Int32" Name="RequestId" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="ClosedOn" Nullable="false" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="USP_GetMyRequsetCountForReport_Result">
+          <Property Type="String" Name="CreatedDate" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="RequestCount" Nullable="true" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="RMSDbModelStoreContainer" CdmEntityContainer="RMSDbContext">
+          <EntitySetMapping Name="RoleMaster">
+            <EntityTypeMapping TypeName="RMSDbModel.RoleMaster">
+              <MappingFragment StoreEntitySet="RoleMaster">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserMaster">
+            <EntityTypeMapping TypeName="RMSDbModel.UserMaster">
+              <MappingFragment StoreEntitySet="UserMaster">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="SecurityToken" ColumnName="SecurityToken" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="USP_AddUser" FunctionName="RMSDbModel.Store.USP_AddUser" />
+          <FunctionImportMapping FunctionImportName="USP_AuthenticateUser" FunctionName="RMSDbModel.Store.USP_AuthenticateUser">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RMSDbModel.USP_AuthenticateUser_Result">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="SecurityToken" ColumnName="SecurityToken" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="ErrorInfo">
+            <EntityTypeMapping TypeName="RMSDbModel.ErrorInfo">
+              <MappingFragment StoreEntitySet="ErrorInfo">
+                <ScalarProperty Name="RequestURI" ColumnName="RequestURI" />
+                <ScalarProperty Name="StackTrace" ColumnName="StackTrace" />
+                <ScalarProperty Name="LogTime" ColumnName="LogTime" />
+                <ScalarProperty Name="Caller" ColumnName="Caller" />
+                <ScalarProperty Name="InnerException" ColumnName="InnerException" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Source" ColumnName="Source" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RequestStatusChangeLog">
+            <EntityTypeMapping TypeName="RMSDbModel.RequestStatusChangeLog">
+              <MappingFragment StoreEntitySet="RequestStatusChangeLog">
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="RequestId" ColumnName="RequestId" />
+                <ScalarProperty Name="LogId" ColumnName="LogId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RequestStatusMaster">
+            <EntityTypeMapping TypeName="RMSDbModel.RequestStatusMaster">
+              <MappingFragment StoreEntitySet="RequestStatusMaster">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="StatusName" ColumnName="StatusName" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="USP_GetRequestDetails" FunctionName="RMSDbModel.Store.USP_GetRequestDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RMSDbModel.USP_GetRequestDetails_Result">
+                <ScalarProperty Name="RequestId" ColumnName="RequestId" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="ModelNumber" ColumnName="ModelNumber" />
+                <ScalarProperty Name="ProblemDetails" ColumnName="ProblemDetails" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="CustomerContact" ColumnName="CustomerContact" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="StatusName" ColumnName="StatusName" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="Expense" ColumnName="Expense" />
+                <ScalarProperty Name="FullAddress" ColumnName="FullAddress" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="USP_GetRequestStatusChangeLog" FunctionName="RMSDbModel.Store.USP_GetRequestStatusChangeLog">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RMSDbModel.USP_GetRequestStatusChangeLog_Result">
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="StatusName" ColumnName="StatusName" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="CityMaster">
+            <EntityTypeMapping TypeName="RMSDbModel.CityMaster">
+              <MappingFragment StoreEntitySet="CityMaster">
+                <ScalarProperty Name="StateId" ColumnName="StateId" />
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
+                <ScalarProperty Name="CityId" ColumnName="CityId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StateMaster">
+            <EntityTypeMapping TypeName="RMSDbModel.StateMaster">
+              <MappingFragment StoreEntitySet="StateMaster">
+                <ScalarProperty Name="StateName" ColumnName="StateName" />
+                <ScalarProperty Name="StateId" ColumnName="StateId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="USP_GetRequestsForDashboard" FunctionName="RMSDbModel.Store.USP_GetRequestsForDashboard">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RMSDbModel.USP_GetRequestsForDashboard_Result">
+                <ScalarProperty Name="RequestId" ColumnName="RequestId" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="ModelNumber" ColumnName="ModelNumber" />
+                <ScalarProperty Name="ProblemDetails" ColumnName="ProblemDetails" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="CustomerContact" ColumnName="CustomerContact" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="StatusName" ColumnName="StatusName" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="RepairRequestDetails">
+            <EntityTypeMapping TypeName="RMSDbModel.RepairRequestDetails">
+              <MappingFragment StoreEntitySet="RepairRequestDetails">
+                <ScalarProperty Name="Expense" ColumnName="Expense" />
+                <ScalarProperty Name="CityId" ColumnName="CityId" />
+                <ScalarProperty Name="StateId" ColumnName="StateId" />
+                <ScalarProperty Name="CustomerPinCode" ColumnName="CustomerPinCode" />
+                <ScalarProperty Name="CustomerAddress" ColumnName="CustomerAddress" />
+                <ScalarProperty Name="CustomerContact" ColumnName="CustomerContact" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ProblemDetails" ColumnName="ProblemDetails" />
+                <ScalarProperty Name="ModelNumber" ColumnName="ModelNumber" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="RequestId" ColumnName="RequestId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="USP_GetRequestCountByStatus" FunctionName="RMSDbModel.Store.USP_GetRequestCountByStatus">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RMSDbModel.USP_GetRequestCountByStatus_Result">
+                <ScalarProperty Name="StatusName" ColumnName="StatusName" />
+                <ScalarProperty Name="RequestCount" ColumnName="RequestCount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="USP_GetRequestStartEndDate" FunctionName="RMSDbModel.Store.USP_GetRequestStartEndDate">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RMSDbModel.USP_GetRequestStartEndDate_Result">
+                <ScalarProperty Name="RequestId" ColumnName="RequestId" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="ClosedOn" ColumnName="ClosedOn" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="USP_GetMyRequsetCountForReport" FunctionName="RMSDbModel.Store.USP_GetMyRequsetCountForReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="RMSDbModel.USP_GetMyRequsetCountForReport_Result">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="RequestCount" ColumnName="RequestCount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

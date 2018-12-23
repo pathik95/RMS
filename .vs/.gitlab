@@ -1,0 +1,13 @@
+{
+  "User": {
+    "Id": 671,
+    "Username": "patel.pp.4",
+    "Name": "Pathik Patel",
+    "Email": "pathik.patel@lntinfotech.com",
+    "AvatarUrl": "https://secure.gravatar.com/avatar/66cae29f6f54c7b0bcd4ed17ecf33384?s=80&d=identicon",
+    "PrivateToken": "1245ee8fe522b2ae7424ae39027c50855fae3ca420f64ece038347be5125a99e",
+    "Host": "https://gitlab.pg.com/",
+    "TwoFactorEnabled": false,
+    "ApiVersion": 3
+  }
+}

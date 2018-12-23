@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="8bf4443ad94e4b82b08afda6696d0722" Name="Diagram1">
+        <EntityTypeShape EntityType="RMSDbModel.RoleMaster" Width="1.5" PointX="1" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="RMSDbModel.UserMaster" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
+        <AssociationConnector Association="RMSDbModel.FK_UserMaster_RoleMaster" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="RMSDbModel.ErrorInfo" Width="1.5" PointX="5.375" PointY="5.75" />
+        <EntityTypeShape EntityType="RMSDbModel.RequestStatusChangeLog" Width="1.5" PointX="10.25" PointY="1.375" />
+        <EntityTypeShape EntityType="RMSDbModel.RequestStatusMaster" Width="1.5" PointX="5.75" PointY="1.75" />
+        <AssociationConnector Association="RMSDbModel.FK_ReportStatusChangeLog_RepairStatusMaster" />
+        <AssociationConnector Association="RMSDbModel.FK_ReportStatusChangeLog_UserMaster" />
+        <EntityTypeShape EntityType="RMSDbModel.CityMaster" Width="1.5" PointX="9.625" PointY="6.875" />
+        <EntityTypeShape EntityType="RMSDbModel.StateMaster" Width="1.5" PointX="7.375" PointY="7" />
+        <AssociationConnector Association="RMSDbModel.FK_CityMaster_StateMaster" />
+        <EntityTypeShape EntityType="RMSDbModel.RepairRequestDetails" Width="1.5" PointX="8" PointY="0.75" />
+        <AssociationConnector Association="RMSDbModel.FK_RepairTracker_RepairStatusMaster" />
+        <AssociationConnector Association="RMSDbModel.FK_RepairTracker_UserMaster" />
+        <AssociationConnector Association="RMSDbModel.FK_ReportStatusChangeLog_RepairTracker" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

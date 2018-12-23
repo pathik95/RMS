@@ -1,0 +1,424 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="RepairTrackerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="RepairStatusMaster">
+          <Key>
+            <PropertyRef Name="StatusId" />
+          </Key>
+          <Property Name="StatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StatusName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RepairTracker">
+          <Key>
+            <PropertyRef Name="RepairId" />
+          </Key>
+          <Property Name="RepairId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CompanyName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ModelNumber" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ProblemDetails" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="StatusId" Type="int" Nullable="false" />
+          <Property Name="AssignedEngineer" Type="int" />
+          <Property Name="ResolutionApplied" Type="int" />
+        </EntityType>
+        <EntityType Name="ReportStatusChangeLog">
+          <Key>
+            <PropertyRef Name="LogId" />
+          </Key>
+          <Property Name="LogId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RepairId" Type="int" Nullable="false" />
+          <Property Name="StatusId" Type="int" Nullable="false" />
+          <Property Name="ModifiedBy" Type="int" Nullable="false" />
+          <Property Name="ModifiedOn" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RoleMaster">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoleName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserMaster">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="EmailId" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+          <Property Name="LastLoggedInOn" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_RepairTracker_RepairStatusMaster">
+          <End Role="RepairStatusMaster" Type="Self.RepairStatusMaster" Multiplicity="1" />
+          <End Role="RepairTracker" Type="Self.RepairTracker" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RepairStatusMaster">
+              <PropertyRef Name="StatusId" />
+            </Principal>
+            <Dependent Role="RepairTracker">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RepairTracker_UserMaster">
+          <End Role="UserMaster" Type="Self.UserMaster" Multiplicity="1" />
+          <End Role="RepairTracker" Type="Self.RepairTracker" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserMaster">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="RepairTracker">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportStatusChangeLog_RepairStatusMaster">
+          <End Role="RepairStatusMaster" Type="Self.RepairStatusMaster" Multiplicity="1" />
+          <End Role="ReportStatusChangeLog" Type="Self.ReportStatusChangeLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RepairStatusMaster">
+              <PropertyRef Name="StatusId" />
+            </Principal>
+            <Dependent Role="ReportStatusChangeLog">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportStatusChangeLog_RepairTracker">
+          <End Role="RepairTracker" Type="Self.RepairTracker" Multiplicity="1" />
+          <End Role="ReportStatusChangeLog" Type="Self.ReportStatusChangeLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RepairTracker">
+              <PropertyRef Name="RepairId" />
+            </Principal>
+            <Dependent Role="ReportStatusChangeLog">
+              <PropertyRef Name="RepairId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportStatusChangeLog_UserMaster">
+          <End Role="UserMaster" Type="Self.UserMaster" Multiplicity="1" />
+          <End Role="ReportStatusChangeLog" Type="Self.ReportStatusChangeLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserMaster">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ReportStatusChangeLog">
+              <PropertyRef Name="ModifiedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserMaster_RoleMaster">
+          <End Role="RoleMaster" Type="Self.RoleMaster" Multiplicity="1" />
+          <End Role="UserMaster" Type="Self.UserMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RoleMaster">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="UserMaster">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="RepairTrackerModelStoreContainer">
+          <EntitySet Name="RepairStatusMaster" EntityType="Self.RepairStatusMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RepairTracker" EntityType="Self.RepairTracker" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReportStatusChangeLog" EntityType="Self.ReportStatusChangeLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RoleMaster" EntityType="Self.RoleMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserMaster" EntityType="Self.UserMaster" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_RepairTracker_RepairStatusMaster" Association="Self.FK_RepairTracker_RepairStatusMaster">
+            <End Role="RepairStatusMaster" EntitySet="RepairStatusMaster" />
+            <End Role="RepairTracker" EntitySet="RepairTracker" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RepairTracker_UserMaster" Association="Self.FK_RepairTracker_UserMaster">
+            <End Role="UserMaster" EntitySet="UserMaster" />
+            <End Role="RepairTracker" EntitySet="RepairTracker" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportStatusChangeLog_RepairStatusMaster" Association="Self.FK_ReportStatusChangeLog_RepairStatusMaster">
+            <End Role="RepairStatusMaster" EntitySet="RepairStatusMaster" />
+            <End Role="ReportStatusChangeLog" EntitySet="ReportStatusChangeLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportStatusChangeLog_RepairTracker" Association="Self.FK_ReportStatusChangeLog_RepairTracker">
+            <End Role="RepairTracker" EntitySet="RepairTracker" />
+            <End Role="ReportStatusChangeLog" EntitySet="ReportStatusChangeLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportStatusChangeLog_UserMaster" Association="Self.FK_ReportStatusChangeLog_UserMaster">
+            <End Role="UserMaster" EntitySet="UserMaster" />
+            <End Role="ReportStatusChangeLog" EntitySet="ReportStatusChangeLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserMaster_RoleMaster" Association="Self.FK_UserMaster_RoleMaster">
+            <End Role="RoleMaster" EntitySet="RoleMaster" />
+            <End Role="UserMaster" EntitySet="UserMaster" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="RepairTrackerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="RepairStatusMaster">
+          <Key>
+            <PropertyRef Name="StatusId" />
+          </Key>
+          <Property Name="StatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StatusName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="RepairTrackers" Relationship="Self.FK_RepairTracker_RepairStatusMaster" FromRole="RepairStatusMaster" ToRole="RepairTracker" />
+          <NavigationProperty Name="ReportStatusChangeLogs" Relationship="Self.FK_ReportStatusChangeLog_RepairStatusMaster" FromRole="RepairStatusMaster" ToRole="ReportStatusChangeLog" />
+        </EntityType>
+        <EntityType Name="RepairTracker">
+          <Key>
+            <PropertyRef Name="RepairId" />
+          </Key>
+          <Property Name="RepairId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CompanyName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ModelNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProblemDetails" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="StatusId" Type="Int32" Nullable="false" />
+          <Property Name="AssignedEngineer" Type="Int32" />
+          <Property Name="ResolutionApplied" Type="Int32" />
+          <NavigationProperty Name="RepairStatusMaster" Relationship="Self.FK_RepairTracker_RepairStatusMaster" FromRole="RepairTracker" ToRole="RepairStatusMaster" />
+          <NavigationProperty Name="UserMaster" Relationship="Self.FK_RepairTracker_UserMaster" FromRole="RepairTracker" ToRole="UserMaster" />
+          <NavigationProperty Name="ReportStatusChangeLogs" Relationship="Self.FK_ReportStatusChangeLog_RepairTracker" FromRole="RepairTracker" ToRole="ReportStatusChangeLog" />
+        </EntityType>
+        <EntityType Name="ReportStatusChangeLog">
+          <Key>
+            <PropertyRef Name="LogId" />
+          </Key>
+          <Property Name="LogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RepairId" Type="Int32" Nullable="false" />
+          <Property Name="StatusId" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedBy" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="RepairStatusMaster" Relationship="Self.FK_ReportStatusChangeLog_RepairStatusMaster" FromRole="ReportStatusChangeLog" ToRole="RepairStatusMaster" />
+          <NavigationProperty Name="RepairTracker" Relationship="Self.FK_ReportStatusChangeLog_RepairTracker" FromRole="ReportStatusChangeLog" ToRole="RepairTracker" />
+          <NavigationProperty Name="UserMaster" Relationship="Self.FK_ReportStatusChangeLog_UserMaster" FromRole="ReportStatusChangeLog" ToRole="UserMaster" />
+        </EntityType>
+        <EntityType Name="RoleMaster">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="UserMasters" Relationship="Self.FK_UserMaster_RoleMaster" FromRole="RoleMaster" ToRole="UserMaster" />
+        </EntityType>
+        <EntityType Name="UserMaster">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DisplayName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EmailId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <Property Name="LastLoggedInOn" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="RepairTrackers" Relationship="Self.FK_RepairTracker_UserMaster" FromRole="UserMaster" ToRole="RepairTracker" />
+          <NavigationProperty Name="ReportStatusChangeLogs" Relationship="Self.FK_ReportStatusChangeLog_UserMaster" FromRole="UserMaster" ToRole="ReportStatusChangeLog" />
+          <NavigationProperty Name="RoleMaster" Relationship="Self.FK_UserMaster_RoleMaster" FromRole="UserMaster" ToRole="RoleMaster" />
+        </EntityType>
+        <Association Name="FK_RepairTracker_RepairStatusMaster">
+          <End Role="RepairStatusMaster" Type="Self.RepairStatusMaster" Multiplicity="1" />
+          <End Role="RepairTracker" Type="Self.RepairTracker" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RepairStatusMaster">
+              <PropertyRef Name="StatusId" />
+            </Principal>
+            <Dependent Role="RepairTracker">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportStatusChangeLog_RepairStatusMaster">
+          <End Role="RepairStatusMaster" Type="Self.RepairStatusMaster" Multiplicity="1" />
+          <End Role="ReportStatusChangeLog" Type="Self.ReportStatusChangeLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RepairStatusMaster">
+              <PropertyRef Name="StatusId" />
+            </Principal>
+            <Dependent Role="ReportStatusChangeLog">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RepairTracker_UserMaster">
+          <End Role="UserMaster" Type="Self.UserMaster" Multiplicity="1" />
+          <End Role="RepairTracker" Type="Self.RepairTracker" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserMaster">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="RepairTracker">
+              <PropertyRef Name="CreatedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportStatusChangeLog_RepairTracker">
+          <End Role="RepairTracker" Type="Self.RepairTracker" Multiplicity="1" />
+          <End Role="ReportStatusChangeLog" Type="Self.ReportStatusChangeLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RepairTracker">
+              <PropertyRef Name="RepairId" />
+            </Principal>
+            <Dependent Role="ReportStatusChangeLog">
+              <PropertyRef Name="RepairId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportStatusChangeLog_UserMaster">
+          <End Role="UserMaster" Type="Self.UserMaster" Multiplicity="1" />
+          <End Role="ReportStatusChangeLog" Type="Self.ReportStatusChangeLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserMaster">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ReportStatusChangeLog">
+              <PropertyRef Name="ModifiedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserMaster_RoleMaster">
+          <End Role="RoleMaster" Type="Self.RoleMaster" Multiplicity="1" />
+          <End Role="UserMaster" Type="Self.UserMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RoleMaster">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="UserMaster">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="RMSDbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="RepairStatusMasters" EntityType="Self.RepairStatusMaster" />
+          <EntitySet Name="RepairTrackers" EntityType="Self.RepairTracker" />
+          <EntitySet Name="ReportStatusChangeLogs" EntityType="Self.ReportStatusChangeLog" />
+          <EntitySet Name="RoleMasters" EntityType="Self.RoleMaster" />
+          <EntitySet Name="UserMasters" EntityType="Self.UserMaster" />
+          <AssociationSet Name="FK_RepairTracker_RepairStatusMaster" Association="Self.FK_RepairTracker_RepairStatusMaster">
+            <End Role="RepairStatusMaster" EntitySet="RepairStatusMasters" />
+            <End Role="RepairTracker" EntitySet="RepairTrackers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportStatusChangeLog_RepairStatusMaster" Association="Self.FK_ReportStatusChangeLog_RepairStatusMaster">
+            <End Role="RepairStatusMaster" EntitySet="RepairStatusMasters" />
+            <End Role="ReportStatusChangeLog" EntitySet="ReportStatusChangeLogs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RepairTracker_UserMaster" Association="Self.FK_RepairTracker_UserMaster">
+            <End Role="UserMaster" EntitySet="UserMasters" />
+            <End Role="RepairTracker" EntitySet="RepairTrackers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportStatusChangeLog_RepairTracker" Association="Self.FK_ReportStatusChangeLog_RepairTracker">
+            <End Role="RepairTracker" EntitySet="RepairTrackers" />
+            <End Role="ReportStatusChangeLog" EntitySet="ReportStatusChangeLogs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportStatusChangeLog_UserMaster" Association="Self.FK_ReportStatusChangeLog_UserMaster">
+            <End Role="UserMaster" EntitySet="UserMasters" />
+            <End Role="ReportStatusChangeLog" EntitySet="ReportStatusChangeLogs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserMaster_RoleMaster" Association="Self.FK_UserMaster_RoleMaster">
+            <End Role="RoleMaster" EntitySet="RoleMasters" />
+            <End Role="UserMaster" EntitySet="UserMasters" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="RepairTrackerModelStoreContainer" CdmEntityContainer="RMSDbEntities">
+          <EntitySetMapping Name="RepairStatusMasters">
+            <EntityTypeMapping TypeName="RepairTrackerModel.RepairStatusMaster">
+              <MappingFragment StoreEntitySet="RepairStatusMaster">
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="StatusName" ColumnName="StatusName" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RepairTrackers">
+            <EntityTypeMapping TypeName="RepairTrackerModel.RepairTracker">
+              <MappingFragment StoreEntitySet="RepairTracker">
+                <ScalarProperty Name="RepairId" ColumnName="RepairId" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="ModelNumber" ColumnName="ModelNumber" />
+                <ScalarProperty Name="ProblemDetails" ColumnName="ProblemDetails" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="AssignedEngineer" ColumnName="AssignedEngineer" />
+                <ScalarProperty Name="ResolutionApplied" ColumnName="ResolutionApplied" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReportStatusChangeLogs">
+            <EntityTypeMapping TypeName="RepairTrackerModel.ReportStatusChangeLog">
+              <MappingFragment StoreEntitySet="ReportStatusChangeLog">
+                <ScalarProperty Name="LogId" ColumnName="LogId" />
+                <ScalarProperty Name="RepairId" ColumnName="RepairId" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RoleMasters">
+            <EntityTypeMapping TypeName="RepairTrackerModel.RoleMaster">
+              <MappingFragment StoreEntitySet="RoleMaster">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserMasters">
+            <EntityTypeMapping TypeName="RepairTrackerModel.UserMaster">
+              <MappingFragment StoreEntitySet="UserMaster">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="LastLoggedInOn" ColumnName="LastLoggedInOn" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

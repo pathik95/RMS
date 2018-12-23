@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="RMSDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="CityMaster">
+    <Key>
+      <PropertyRef Name="CityId" />
+    </Key>
+    <Property Name="CityId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CityName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="StateId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ErrorInfo">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Source" Type="nvarchar(max)" />
+    <Property Name="Message" Type="nvarchar(max)" />
+    <Property Name="InnerException" Type="nvarchar(max)" />
+    <Property Name="Caller" Type="nvarchar(max)" />
+    <Property Name="LogTime" Type="datetime" />
+    <Property Name="StackTrace" Type="nvarchar(max)" />
+    <Property Name="RequestURI" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="RepairRequestDetails">
+    <Key>
+      <PropertyRef Name="RequestId" />
+    </Key>
+    <Property Name="RequestId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CompanyName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ModelNumber" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ProblemDetails" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="CreatedBy" Type="int" Nullable="false" />
+    <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+    <Property Name="StatusId" Type="int" Nullable="false" />
+    <Property Name="CustomerName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="CustomerContact" Type="nvarchar" MaxLength="10" Nullable="false" />
+    <Property Name="CustomerAddress" Type="nvarchar(max)" />
+    <Property Name="CustomerPinCode" Type="nvarchar(max)" />
+    <Property Name="StateId" Type="int" />
+    <Property Name="CityId" Type="int" />
+    <Property Name="Expense" Type="decimal" Precision="18" Scale="2" />
+  </EntityType>
+  <EntityType Name="RequestStatusChangeLog">
+    <Key>
+      <PropertyRef Name="LogId" />
+    </Key>
+    <Property Name="LogId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RequestId" Type="int" Nullable="false" />
+    <Property Name="StatusId" Type="int" Nullable="false" />
+    <Property Name="ModifiedBy" Type="int" Nullable="false" />
+    <Property Name="ModifiedOn" Type="datetime" Nullable="false" />
+    <Property Name="Comments" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="RequestStatusMaster">
+    <Key>
+      <PropertyRef Name="StatusId" />
+    </Key>
+    <Property Name="StatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="StatusName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RoleMaster">
+    <Key>
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RoleName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="StateMaster">
+    <Key>
+      <PropertyRef Name="StateId" />
+    </Key>
+    <Property Name="StateId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="StateName" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UserMaster">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DisplayName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="15" Nullable="false" />
+    <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="EmailId" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="RoleId" Type="int" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="SecurityToken" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_CityMaster_StateMaster">
+    <End Role="StateMaster" Type="Self.StateMaster" Multiplicity="1" />
+    <End Role="CityMaster" Type="Self.CityMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StateMaster">
+        <PropertyRef Name="StateId" />
+      </Principal>
+      <Dependent Role="CityMaster">
+        <PropertyRef Name="StateId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RepairTracker_RepairStatusMaster">
+    <End Role="RequestStatusMaster" Type="Self.RequestStatusMaster" Multiplicity="1" />
+    <End Role="RepairRequestDetails" Type="Self.RepairRequestDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RequestStatusMaster">
+        <PropertyRef Name="StatusId" />
+      </Principal>
+      <Dependent Role="RepairRequestDetails">
+        <PropertyRef Name="StatusId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RepairTracker_UserMaster">
+    <End Role="UserMaster" Type="Self.UserMaster" Multiplicity="1" />
+    <End Role="RepairRequestDetails" Type="Self.RepairRequestDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserMaster">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="RepairRequestDetails">
+        <PropertyRef Name="CreatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ReportStatusChangeLog_RepairStatusMaster">
+    <End Role="RequestStatusMaster" Type="Self.RequestStatusMaster" Multiplicity="1" />
+    <End Role="RequestStatusChangeLog" Type="Self.RequestStatusChangeLog" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RequestStatusMaster">
+        <PropertyRef Name="StatusId" />
+      </Principal>
+      <Dependent Role="RequestStatusChangeLog">
+        <PropertyRef Name="StatusId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ReportStatusChangeLog_RepairTracker">
+    <End Role="RepairRequestDetails" Type="Self.RepairRequestDetails" Multiplicity="1" />
+    <End Role="RequestStatusChangeLog" Type="Self.RequestStatusChangeLog" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RepairRequestDetails">
+        <PropertyRef Name="RequestId" />
+      </Principal>
+      <Dependent Role="RequestStatusChangeLog">
+        <PropertyRef Name="RequestId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ReportStatusChangeLog_UserMaster">
+    <End Role="UserMaster" Type="Self.UserMaster" Multiplicity="1" />
+    <End Role="RequestStatusChangeLog" Type="Self.RequestStatusChangeLog" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserMaster">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="RequestStatusChangeLog">
+        <PropertyRef Name="ModifiedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserMaster_RoleMaster">
+    <End Role="RoleMaster" Type="Self.RoleMaster" Multiplicity="1" />
+    <End Role="UserMaster" Type="Self.UserMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RoleMaster">
+        <PropertyRef Name="RoleId" />
+      </Principal>
+      <Dependent Role="UserMaster">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="USP_AddUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="userName" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="password" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="displayName" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="emailId" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="roleId" Type="nvarchar(max)" Mode="In" />
+  </Function>
+  <Function Name="USP_AuthenticateUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="userName" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="password" Type="nvarchar(max)" Mode="In" />
+  </Function>
+  <Function Name="USP_GetMyRequsetCountForReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="userId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="USP_GetRequestCountByStatus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="statusId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="USP_GetRequestDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="requestId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="USP_GetRequestsForDashboard" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="userId" Type="int" Mode="In" />
+    <Parameter Name="statusId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="USP_GetRequestStartEndDate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="USP_GetRequestStatusChangeLog" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="requestId" Type="int" Mode="In" />
+  </Function>
+  <EntityContainer Name="RMSDbModelStoreContainer">
+    <EntitySet Name="CityMaster" EntityType="Self.CityMaster" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ErrorInfo" EntityType="Self.ErrorInfo" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RepairRequestDetails" EntityType="Self.RepairRequestDetails" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RequestStatusChangeLog" EntityType="Self.RequestStatusChangeLog" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RequestStatusMaster" EntityType="Self.RequestStatusMaster" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RoleMaster" EntityType="Self.RoleMaster" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="StateMaster" EntityType="Self.StateMaster" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UserMaster" EntityType="Self.UserMaster" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_CityMaster_StateMaster" Association="Self.FK_CityMaster_StateMaster">
+      <End Role="StateMaster" EntitySet="StateMaster" />
+      <End Role="CityMaster" EntitySet="CityMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RepairTracker_RepairStatusMaster" Association="Self.FK_RepairTracker_RepairStatusMaster">
+      <End Role="RequestStatusMaster" EntitySet="RequestStatusMaster" />
+      <End Role="RepairRequestDetails" EntitySet="RepairRequestDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RepairTracker_UserMaster" Association="Self.FK_RepairTracker_UserMaster">
+      <End Role="UserMaster" EntitySet="UserMaster" />
+      <End Role="RepairRequestDetails" EntitySet="RepairRequestDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ReportStatusChangeLog_RepairStatusMaster" Association="Self.FK_ReportStatusChangeLog_RepairStatusMaster">
+      <End Role="RequestStatusMaster" EntitySet="RequestStatusMaster" />
+      <End Role="RequestStatusChangeLog" EntitySet="RequestStatusChangeLog" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ReportStatusChangeLog_RepairTracker" Association="Self.FK_ReportStatusChangeLog_RepairTracker">
+      <End Role="RepairRequestDetails" EntitySet="RepairRequestDetails" />
+      <End Role="RequestStatusChangeLog" EntitySet="RequestStatusChangeLog" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ReportStatusChangeLog_UserMaster" Association="Self.FK_ReportStatusChangeLog_UserMaster">
+      <End Role="UserMaster" EntitySet="UserMaster" />
+      <End Role="RequestStatusChangeLog" EntitySet="RequestStatusChangeLog" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserMaster_RoleMaster" Association="Self.FK_UserMaster_RoleMaster">
+      <End Role="RoleMaster" EntitySet="RoleMaster" />
+      <End Role="UserMaster" EntitySet="UserMaster" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
